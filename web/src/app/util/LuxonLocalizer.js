@@ -1,3 +1,6 @@
+// NOTE PR in progress here: https://github.com/jquense/react-big-calendar/pull/1574
+// if merged, delete this file and use built-in luxon localizer
+
 import * as dates from 'react-big-calendar/lib/utils/dates'
 import { DateLocalizer } from 'react-big-calendar/lib/localizer'
 
