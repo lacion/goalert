@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
-import p from 'prop-types'
+import React, { useState, useEffect, useRef, ReactElement } from 'react'
 import { makeStyles } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import Hidden from '@material-ui/core/Hidden'
@@ -44,6 +43,11 @@ const useStyles = makeStyles(theme => {
   }
 })
 
+interface SearchProps {
+  key?: string
+  endAdornment?: ReactElement
+}
+
 /*
  * Renders a search text field that utilizes the URL params to regulate
  * what data to display
@@ -53,10 +57,11 @@ const useStyles = makeStyles(theme => {
  *
  * On a larger screen, the field will always be present to use in the app bar.
  */
-export default function Search(props) {
+export default function Search(props: SearchProps) {
   const searchParam = useSelector(searchSelector)
   const dispatch = useDispatch()
-  const setSearchParam = value => dispatch(setURLParam('search', value))
+  const setSearchParam = (value: string) =>
+    dispatch(setURLParam('search', value))
   const classes = useStyles()
   const [search, setSearch] = useState(searchParam)
   const [showMobile, setShowMobile] = useState(Boolean(search))
@@ -80,7 +85,7 @@ export default function Search(props) {
     return () => clearTimeout(t)
   }, [search])
 
-  function renderTextField(extraProps) {
+  function renderTextField(options?: { style?: React.CSSProperties }) {
     return (
       <TextField
         InputProps={{
@@ -92,7 +97,9 @@ export default function Search(props) {
           ),
           endAdornment: props.endAdornment && (
             <InputAdornment position='end'>
-              {React.cloneElement(props.endAdornment, { anchorRef: fieldRef })}
+              {React.cloneElement(props.endAdornment, {
+                anchorRef: fieldRef,
+              })}
             </InputAdornment>
           ),
         }}
@@ -104,7 +111,7 @@ export default function Search(props) {
         onChange={e => setSearch(e.target.value)}
         value={search}
         className={textClass}
-        {...extraProps}
+        style={options?.style}
       />
     )
   }
@@ -159,8 +166,4 @@ export default function Search(props) {
       <Hidden mdUp>{renderMobile()}</Hidden>
     </React.Fragment>
   )
-}
-
-Search.propTypes = {
-  endAdornment: p.node,
 }
